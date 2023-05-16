@@ -1,35 +1,42 @@
-# HTTP Endpoint Documentation: `loadFeed`
+<!DOCTYPE html>
+<html lang="en">
 
-This documentation provides information about the HTTP endpoint function `loadFeed`, which is part of a Firebase Functions project. The `loadFeed` function retrieves a feed of posts based on specified parameters and returns the posts to the client.
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTTP Endpoint Documentation: loadFeed</title>
+</head>
 
-## Endpoint Details
+<body>
+  <h1>HTTP Endpoint Documentation: <code>loadFeed</code></h1>
 
-- **Endpoint URL:** `https://your-project-url/loadFeed`
-- **HTTP Method:** `GET`
-- **Content Type:** `application/json`
+  <h2>Endpoint Details</h2>
+  <ul>
+    <li><strong>Endpoint URL:</strong> <code>https://your-project-url/loadFeed</code></li>
+    <li><strong>HTTP Method:</strong> <code>GET</code></li>
+    <li><strong>Content Type:</strong> <code>application/json</code></li>
+  </ul>
 
-## Parameters
+  <h2>Parameters</h2>
+  <p>The <code>loadFeed</code> endpoint accepts the following query parameters:</p>
+  <ol>
+    <li><code>numberOfPosts</code> (required): The number of posts to retrieve. Must be a positive number greater than 0.</li>
+    <li><code>startAtPost</code> (required): The index of the post to start retrieving from. Must be a non-negative number.</li>
+    <li><code>gamePosted</code> (optional): Filter the posts by a specific game. Must be an integer.</li>
+    <li><code>userPosted</code> (optional): Filter the posts by a specific user. Must be an integer.</li>
+  </ol>
 
-The `loadFeed` endpoint accepts the following query parameters:
+  <h2>Response</h2>
+  <p>The endpoint responds with an HTTP status code and a JSON response body.</p>
+  <ul>
+    <li>If the request is successful, the response will have an HTTP status code of <code>200</code> and the response
+      body will contain an array of posts.</li>
+    <li>If the request is invalid or missing required parameters, the response will have an HTTP status code of <code>400</code> and the response body will contain an error message.</li>
+  </ul>
 
-1. `numberOfPosts` (required): The number of posts to retrieve. Must be a positive number greater than 0.
-2. `startAtPost` (required): The index of the post to start retrieving from. Must be a non-negative number.
-3. `gamePosted` (optional): Filter the posts by a specific game. Must be an integer.
-4. `userPosted` (optional): Filter the posts by a specific user. Must be an integer.
-
-## Response
-
-The endpoint responds with an HTTP status code and a JSON response body.
-
-- If the request is successful, the response will have an HTTP status code of `200` and the response body will contain an array of posts.
-- If the request is invalid or missing required parameters, the response will have an HTTP status code of `400` and the response body will contain an error message.
-
-### Successful Response
-
-Example response body:
-
-```json
-[
+  <h3>Successful Response</h3>
+  <p>Example response body:</p>
+  <pre><code>[
   {
     "postId": "123",
     "title": "Example Post",
@@ -46,59 +53,40 @@ Example response body:
     "userId": 123,
     "gamePosted": 789
   }
-]
-```
+]</code></pre>
 
-### Error Response
-
-Example error response body:
-
-```json
-{
+  <h3>Error Response</h3>
+  <p>Example error response body:</p>
+  <pre><code>{
   "error": "Missing required parameters: numberOfPosts and startAtPost"
-}
-```
+}</code></pre>
 
-## Implementation Details
+  <h2>Implementation Details</h2>
+  <p>The <code>loadFeed</code> function performs the following steps:</p>
+  <ol>
+    <li>Parses the query parameters from the request URL: <code>numberOfPosts</code>, <code>startAtPost</code>, <code>gamePosted</code>, and <code>userPosted</code>.</li>
+    <li>Checks if the required parameters (<code>numberOfPosts</code> and <code>startAtPost</code>) are present. If not, it sends a <code>400</code> error response.</li>
+    <li>Validates that <code>numberOfPosts</code> is a positive number greater than 0. If not, it sends a <code>400</code> error response.</li>
+    <li>Validates that <code>startAtPost</code> is a non-negative number. If not, it sends a <code>400</code> error response.</li>
+    <li>Checks if both <code>gamePosted</code> and <code>userPosted</code> parameters are provided. If so, it sends a <code>400</code> error response, as filtering by both is not allowed.</li>
+    <li>Checks if the <code>gamePosted</code> parameter is present and is a number. If valid, sets the <code>searchWithinGame</code> flag to <code>true</code>. If not, sends a <code>400</code> error response.</li>
+    <li>Checks if the <code>userPosted</code> parameter is present and is a number. If valid, sets the <code>searchWithinUser</code> flag to <code>true</code>. If not, sends a <code>400</code> error response.</li>
+    <li>Initializes the Firebase Admin SDK.</li>
+    <li>Retrieves a reference to the <code>Posts</code> collection in the Firebase Realtime Database.</li>
+    <li>Declares an empty <code>postsArray</code> to store the retrieved posts.</li>
+    <li>If <code>searchWithinGame</code> is <code>true</code>, retrieves posts filtered by the <code>gamePosted</code> parameter from the database, sorts them by <code>timePosted</code>, and stores them in the <code>postsArray</code>.</li>
+    <li>If <code>searchWithinUser</code> is <code>true</code>, retrieves posts filtered by the <code>userPosted</code> parameter from the database, sorts them by <code>timePosted</code>, and stores them in the <code>postsArray</code>.</li>
+    <li>If neither <code>searchWithinGame</code> nor <code>searchWithinUser</code> is <code>true</code>, retrieves all posts from the database, sorts them by <code>timePosted</code>, and stores them in the <code>postsArray</code>.</li>
+    <li>Selects the relevant subset of posts based on the <code>startAtPost</code> and <code>numberOfPosts</code> parameters.</li>
+    <li>Sends a successful response with the <code>postsArray</code> as the response body.</li>
+  </ol>
 
-The `loadFeed` function performs the following steps:
+  <h2>Usage</h2>
+  <p>To use the <code>loadFeed</code> endpoint, send an HTTP GET request to the specified URL (<code>https://your-project-url/loadFeed</code>) with the appropriate query parameters.</p>
 
-1. Parses the query parameters from the request URL: `numberOfPosts`, `startAtPost`, `gamePosted`, and `userPosted`.
-2. Checks if the required parameters (`numberOfPosts` and `startAtPost`) are present. If not, it sends a `400` error response.
-3. Validates that `numberOfPosts` is a positive number greater than 0. If not, it sends a `400` error response.
-4. Validates that `startAtPost` is a non-negative number. If not, it sends a `400` error response.
-5. Checks if both `gamePosted` and `userPosted` parameters are provided. If so, it sends a `400` error response, as filtering by both is not allowed.
-6. Checks if the `gamePosted` parameter is present and is a number. If valid, sets the `searchWithinGame` flag to `true`. If not, sends a `400` error response.
-7. Checks if the `userPosted` parameter is present and is a number. If valid, sets the `searchWithinUser` flag to `true`. If not, sends a `400` error response.
-8. Initializes the Firebase Admin SDK.
-9. Retrieves a reference to the `Posts` collection in the Firebase Realtime Database.
-10. Declares an empty `postsArray` to store the retrieved posts.
-11. If `searchWithinGame` is `true`, retrieves posts filtered by the `gamePosted` parameter from the database, sorts them
+  <p>Example request:</p>
+  <pre><code>GET https://your-project-url/loadFeed?numberOfPosts=10&amp;startAtPost=1&amp;gamePosted=123</code></pre>
 
- by `timePosted`, and stores them in the `postsArray`.
-12. If `searchWithinUser` is `true`, retrieves posts filtered by the `userPosted` parameter from the database, sorts them by `timePosted`, and stores them in the `postsArray`.
-13. If neither `searchWithinGame` nor `searchWithinUser` is `true`, retrieves all posts from the database, sorts them by `timePosted`, and stores them in the `postsArray`.
-14. Selects the relevant subset of posts based on the `startAtPost` and `numberOfPosts` parameters.
-15. Sends a successful response with the `postsArray` as the response body.
+  <p>This request retrieves 10 posts starting from the first post (<code>startAtPost=1</code>) and filtered by the game with ID <code>123</code> (<code>gamePosted=123</code>).</p>
 
-## Usage
-
-To use the `loadFeed` endpoint, send an HTTP GET request to the specified URL (`https://your-project-url/loadFeed`) with the appropriate query parameters.
-
-Example request:
-
-```
-GET https://your-project-url/loadFeed?numberOfPosts=10&startAtPost=1&gamePosted=123
-```
-
-This request retrieves 10 posts starting from the first post (`startAtPost=1`) and filtered by the game with ID `123` (`gamePosted=123`).
-
-## Error Handling
-
-The `loadFeed` function includes error handling for various scenarios:
-
-- Missing required parameters: If `numberOfPosts` or `startAtPost` is missing, the function responds with a `400` status code and an error message indicating the missing parameters.
-- Invalid parameters: If `numberOfPosts` or `startAtPost` is not a valid number, the function responds with a `400` status code and an error message indicating the expected format.
-- Filtering conflict: If both `gamePosted` and `userPosted` parameters are provided, the function responds with a `400` status code and an error message indicating that filtering by both is not allowed.
-
-Make sure to handle the error responses appropriately in your client application.
+  <h2>Error Handling</h2>
