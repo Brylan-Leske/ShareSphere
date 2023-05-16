@@ -7,8 +7,8 @@
   <h2>Welcome to the Documentation</h2>
 
   <ul>
-    <li><a href="api/index.html">API Documentation</a></li>
-    <li><a href="other-section/index.html">Other Section Documentation</a></li>
+    <li><a href="api/index.md">API Documentation</a></li>
+    <li><a href="other-section/index.md">Other Section Documentation</a></li>
     <!-- Add more links to other section homepages as needed -->
   </ul>
 </body>
