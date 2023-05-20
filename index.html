@@ -108,53 +108,18 @@
         tabcontent[i].style.display = "none";
       }
 
-      // Fetch the tab content from the separate HTML file
-      fetchTabContent(tabName, function (content) {
-        // Display the fetched tab content
-        document.getElementById(tabName).innerHTML = content;
-        document.getElementById(tabName).style.display = "block";
+      // Display the selected tab content
+      document.getElementById(tabName).style.display = "block";
 
-        // Update the top bar path
-        var topbarPath = document.getElementById("topbar-path");
+      // Update the top bar path
+      var topbarPath = document.getElementById("topbar-path");
 
-        if (fromSidebar) {
-          pathObjects = 1;
-          topbarPath.innerHTML = '<span id=' + pathObjects + ' class="topbarPathName" onclick="useTopbarPath(\'' + tabName + '\',' + pathObjects + ')">' + pathName + '</span>';
-        } else {
-          pathObjects += 1;
-          topbarPath.innerHTML += '<span id=' + pathObjects + ' class="topbarPathName" onclick="useTopbarPath(\'' + tabName + '\',' + pathObjects + ')"> > ' + pathName + '</span>';
-        }
-      });
-    }
-
-    function fetchTabContent(tabName, callback) {
-      // Map tab names to file paths
-      var tabFiles = {
-        Home: "/tabs/home.html",
-        Documentation: "/tabs/documentation.html",
-        Customizer: "/tabs/customizer.html",
-        Credit: "/tabs/credit.html",
-        Installation: "/tabs/installation.html",
-        // Add more tab names and file paths as needed
-      };
-
-      // Check if the tab name is valid
-      if (tabFiles.hasOwnProperty(tabName)) {
-        var filePath = tabFiles[tabName];
-
-        // Fetch the tab content from the HTML file
-        fetch(filePath)
-          .then(function (response) {
-            return response.text();
-          })
-          .then(function (content) {
-            callback(content);
-          })
-          .catch(function (error) {
-            console.log("Error fetching tab content:", error);
-          });
+      if (fromSidebar) {
+        pathObjects = 1;
+        topbarPath.innerHTML = '<span id=' + pathObjects + ' class="topbarPathName" onclick="useTopbarPath(' + tabName + '.id,' + pathObjects + ')">' + pathName + '</span>';
       } else {
-        console.log("Invalid tab name:", tabName);
+        pathObjects += 1;
+        topbarPath.innerHTML += '<span id=' + pathObjects + ' class="topbarPathName" onclick="useTopbarPath(' + tabName + '.id,' + pathObjects + ')"> > ' + pathName + '</span>';
       }
     }
 
@@ -233,6 +198,7 @@
     }
 
   </script>
+
 </head>
 
 <body>
@@ -260,9 +226,450 @@
 
   <!-- Content -->
   <div class="content">
-    <div id="tabContentContainer"></div>
-  </div>
+    <!-- Home tab -->
+    <div id="Home" class="tabcontent">
+      <!DOCTYPE html>
+      <html>
 
+      <head>
+        <title>ShareSphere</title>
+      </head>
+
+      <body>
+        <div style="text-align: center;">
+          <img src="/pageAssets/BannerLogoWhite.png" style="max-width:100%;max-height:100%;">
+          <b>ShareSphere is a modern, easy to use, and feature rich cross-game social network for Roblox.</b>
+          <br>
+          <a href="https://URL_HERE"><img src="https://i.ibb.co/X7D3jgZ/Roblox.png" alt="Get it on Roblox!"></a>
+          <a href="https://URL_HERE"><img src="https://i.ibb.co/cw4qpWN/File.png" alt="Download File"></a>
+          <a href="https://URL_HERE"><img src="https://i.ibb.co/thGh17w/GitHub.png" alt="Get it on GitHub!"></a>
+          <a href="https://URL_HERE"><img src="https://i.ibb.co/VwCPq1n/Documentation.png"
+              alt="View documentation!"></a>
+        </div>
+        <br>
+
+        <h3><a name="About">About ShareSphere</a></h3>
+        <p>ShareSphere is a cross-game social network for Roblox, but what does that really mean?</p>
+        <p>In simpler terms, it's twitter, but for roblox. In each game with ShareSphere installed, users are able to
+          open
+          the ShareSphere window and share posts. Users can choose to share posts globally, with all games that have
+          ShareSphere installed, or locally, just to the game they're currently in.</p>
+        <p>These posts can include pictures, invite links<span style="display:none;">(to server or game)</span>, or
+          donation
+          requests. And with new features in the works, users will soon be able to include content such as polls, and
+          catalog items.</p>
+        <p>Posts on ShareSphere can also be promoted. Users can promote their post, sending it to the top of the global
+          or
+          local feed for a robux charge. This can be beneficial to many groups including content creators and game
+          developers. For example, a content creator could promote a post to get players to join the server they're in,
+          or
+          game developers can promote posts to advertise their games.</p>
+        <hr>
+
+        <h3><a name="Features">Features</a></h3>
+        <ul>
+          <li><strong>Supports all devices, hassle-free.</strong>
+            <ul>
+              <li>UI automatically adapts to fill the screen when the user is on a mobile device, ShareSphere will set
+                the
+                screen back to the previous orientation mode when closed.</li>
+            </ul>
+          </li>
+          <li><strong>Customizable themes</strong>
+            <ul>
+              <li>Game creators and users can customize the look of ShareSphere's interface. More Details...
+                <ul>
+                  <li>Users can choose to use the game's theme or choose their own.</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>Invite Customization</strong>
+            <ul>
+              <li>Game creators can customize how user invites look and work, in addition to disabling them. More
+                Details...
+              </li>
+            </ul>
+          </li>
+          <li><strong>Simple, adaptable interface</strong></li>
+        </ul>
+        <hr>
+
+        <h3><a name="Installation">Installation</a></h3>
+        <p>Installing ShareSphere is easy, but there are some important steps and options, so make sure to read the
+          guide
+          thoroughly.</p>
+        <h4>Step 1.</h4>
+        <p>Decide whether you want to use the open source, fully customizable version of ShareSphere<sup>†</sup>, or the
+          more
+          locked down version of ShareSphere, which enables more features for both you the developer, and for the users.
+        </p>
+        <details>
+          <summary>If you chose to use the first version</summary>
+          <p>You can simply download this <a href="https://">Roblox model</a> and set up ShareSphere for yourself.</p>
+        </details>
+        <details>
+          <summary>If you chose to use the second version</summary>
+          <h4>Step 2.</h4>
+          <p>Insert this <a href="https://">Roblox model</a> into your game. (The model should be inserted into
+            ServerScriptStorage, the loader sorts all components into their places when the server starts.)</p>
+          <h4>Step 3.</h4>
+          <p>Find the "Configuration" object inside of the script called "ShareSphere Loader" and paste your
+            customization
+            code into the stringValue called "customizationCode".</p>
+          <h4>Step 4.</h4>
+          <p>Allow HTTP Requests<br>
+            Allow Third-Party-Teleports<br>
+            Allow Third-Party-Sales<br>
+            Enable Studio Access to API Services<sup>(optional, highly recommended)</sup></p>
+          <p>That's it! ShareSphere is all set up.</p>
+        </details>
+        <br><br>
+        <div>
+          <small>
+            <strong>Disclaimers:</strong><br>
+            *Global feed posting is only available to users in games using the secure version of ShareSphere.<br>
+            **Indicates a feature that is not released on the public version of ShareSphere, may be in development.<br>
+            ***The price for global and local feed promotion is adaptable. Global feed promotion is generally more than
+            local
+            feed promotion. Global feed promotion's price changes based on the time of day and current active users.
+            Local
+            feed promotion's price is based on several factors such as average players, etc. Post promotion for posts
+            with
+            extra content such as invite links may cost more. Post promotion can cost from
+            <sub><img src="pageAssets/robux_16.png"></sub>15 to
+            <sub><img src="pageAssets/robux_16.png"></sub>250.<br>
+            <sup>†</sup>Features may be limited or different between the two versions of ShareSphere. ShareSphere Secure
+            gives
+            access to global feed posting, ShareSphere Open only has support for local feed posting.
+          </small>
+        </div>
+      </body>
+
+      </html>
+
+    </div>
+
+    <!-- Documentation tab -->
+    <div id="Documentation" class="tabcontent">
+      <h1>Documentation</h1>
+      <p>Documentation for all ShareSphere things</p>
+      <!-- a link that opens the API documentation subtab -->
+      <a href="#" onclick="openTab('API', 'API Documentation')">API Documentation</a>
+    </div>
+
+    <!-- API Documentation sub-tab -->
+    <div id="API" class="tabcontent">
+      <h1>API Documentation</h1>
+      <p>Documentation for ShareSphere API</p>
+      <!-- a link that opens the API documentation subtab -->
+      <a href="#" onclick="openTab('createPost', 'createPost')">createPost
+        Endpoint</a>
+      <br>
+      <a href="#" onclick="openTab('loadFeed', 'loadFeed')">loadFeed
+        Endpoint</a>
+    </div>
+
+    <div id="createPost" class="tabcontent">
+      <!DOCTYPE html>
+      <html lang="en">
+
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>HTTP Endpoint Documentation: loadFeed</title>
+      </head>
+
+      <body>
+        <h1>HTTP Endpoint Documentation: <code>loadFeed</code></h1>
+
+        <h2>Endpoint Details</h2>
+        <ul>
+          <li><strong>Endpoint URL:</strong> <code>https://your-project-url/loadFeed</code></li>
+          <li><strong>HTTP Method:</strong> <code>GET</code></li>
+          <li><strong>Content Type:</strong> <code>application/json</code></li>
+        </ul>
+
+        <h2>Parameters</h2>
+        <p>The <code>loadFeed</code> endpoint accepts the following query parameters:</p>
+        <ol>
+          <li><code>numberOfPosts</code> (required): The number of posts to retrieve. Must be a positive number greater
+            than
+            0.</li>
+          <li><code>startAtPost</code> (required): The index of the post to start retrieving from. Must be a
+            non-negative
+            number.</li>
+          <li><code>gamePosted</code> (optional): Filter the posts by a specific game. Must be an integer.</li>
+          <li><code>userPosted</code> (optional): Filter the posts by a specific user. Must be an integer.</li>
+        </ol>
+
+        <h2>Response</h2>
+        <p>The endpoint responds with an HTTP status code and a JSON response body.</p>
+        <ul>
+          <li>If the request is successful, the response will have an HTTP status code of <code>200</code> and the
+            response
+            body will contain an array of posts.</li>
+          <li>If the request is invalid or missing required parameters, the response will have an HTTP status code of
+            <code>400</code> and the response body will contain an error message.
+          </li>
+        </ul>
+
+        <h3>Successful Response</h3>
+        <p>Example response body:</p>
+        <pre><code>[
+        {
+          "postId": "123",
+          "title": "Example Post",
+          "content": "This is an example post.",
+          "timePosted": 1645628400000,
+          "userId": 456,
+          "gamePosted": 789
+        },
+        {
+          "postId": "456",
+          "title": "Another Post",
+          "content": "This is another post.",
+          "timePosted": 1645632000000,
+          "userId": 123,
+          "gamePosted": 789
+        }
+      ]</code></pre>
+
+        <h3>Error Response</h3>
+        <p>Example error response body:</p>
+        <pre><code>{
+        "error": "Missing required parameters: numberOfPosts and startAtPost"
+      }</code></pre>
+
+        <h2>Implementation Details</h2>
+        <p>The <code>loadFeed</code> function performs the following steps:</p>
+        <ol>
+          <li>Parses the query parameters from the request URL: <code>numberOfPosts</code>, <code>startAtPost</code>,
+            <code>gamePosted</code>, and <code>userPosted</code>.
+          </li>
+          <li>Checks if the required parameters (<code>numberOfPosts</code> and <code>startAtPost</code>) are present.
+            If not,
+            it sends a <code>400</code> error response.</li>
+          <li>Validates that <code>numberOfPosts</code> is a positive number greater than 0. If not, it sends a
+            <code>400</code> error response.
+          </li>
+          <li>Validates that <code>startAtPost</code> is a non-negative number. If not, it sends a <code>400</code>
+            error
+            response.</li>
+          <li>Checks if both <code>gamePosted</code> and <code>userPosted</code> parameters are provided. If so, it
+            sends a
+            <code>400</code> error response, as filtering by both is not allowed.
+          </li>
+          <li>Checks if the <code>gamePosted</code> parameter is present and is a number. If valid, sets the
+            <code>searchWithinGame</code> flag to <code>true</code>. If not, sends a <code>400</code> error response.
+          </li>
+          <li>Checks if the <code>userPosted</code> parameter is present and is a number. If valid, sets the
+            <code>searchWithinUser</code> flag to <code>true</code>. If not, sends a <code>400</code> error response.
+          </li>
+          <li>Initializes the Firebase Admin SDK.</li>
+          <li>Retrieves a reference to the <code>Posts</code> collection in the Firebase Realtime Database.</li>
+          <li>Declares an empty <code>postsArray</code> to store the retrieved posts.</li>
+          <li>If <code>searchWithinGame</code> is <code>true</code>, retrieves posts filtered by the
+            <code>gamePosted</code>
+            parameter from the database, sorts them by <code>timePosted</code>, and stores them in the
+            <code>postsArray</code>.
+          </li>
+          <li>If <code>searchWithinUser</code> is <code>true</code>, retrieves posts filtered by the
+            <code>userPosted</code>
+            parameter from the database, sorts them by <code>timePosted</code>, and stores them in the
+            <code>postsArray</code>.
+          </li>
+          <li>If neither <code>searchWithinGame</code> nor <code>searchWithinUser</code> is <code>true</code>, retrieves
+            all
+            posts from the database, sorts them by <code>timePosted</code>, and stores them in the
+            <code>postsArray</code>.
+          </li>
+          <li>Selects the relevant subset of posts based on the <code>startAtPost</code> and <code>numberOfPosts</code>
+            parameters.</li>
+          <li>Sends a successful response with the <code>postsArray</code> as the response body.</li>
+        </ol>
+
+        <h2>Usage</h2>
+        <p>To use the <code>loadFeed</code> endpoint, send an HTTP GET request to the specified URL
+          (<code>https://your-project-url/loadFeed</code>) with the appropriate query parameters.</p>
+
+        <p>Example request:</p>
+        <pre><code>GET https://your-project-url/loadFeed?numberOfPosts=10&amp;startAtPost=1&amp;gamePosted=123</code></pre>
+
+        <p>This request retrieves 10 posts starting from the first post (<code>startAtPost=1</code>) and filtered by the
+          game
+          with ID <code>123</code> (<code>gamePosted=123</code>).</p>
+
+        <h2>Error Handling</h2>
+        <p>The <code>loadFeed</code> function includes error handling for various scenarios:</p>
+        <ul>
+          <li>Missing required parameters: If <code>numberOfPosts</code> or <code>startAtPost</code> is missing, the
+            function
+            responds with a <code>400</code> status code and an error message indicating the missing parameters.</li>
+          <li>Invalid parameters: If <code>numberOfPosts</code> or <code>startAtPost</code> is not a valid number, the
+            function responds with a <code>400</code> status code and an error message indicating the expected format.
+          </li>
+          <li>Filtering conflict: If both <code>gamePosted</code> and <code>userPosted</code> parameters are provided,
+            the
+            function responds with a <code>400</code> status code and an error message indicating that filtering by both
+            is
+            not allowed.</li>
+        </ul>
+
+        <p>Make sure to handle the error responses appropriately in your client application.</p>
+      </body>
+      <small>API documentation created using AI. It has been reviewed and should work. If you encounter any errors
+        please email robloxShareSpher@gmail.com</small>
+
+      </html>
+
+    </div>
+
+    <div id="loadFeed" class="tabcontent">
+      <!DOCTYPE html>
+      <html lang="en">
+
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>HTTP Endpoint Documentation: createPost</title>
+      </head>
+
+      <body>
+        <h1>HTTP Endpoint Documentation: <code>createPost</code></h1>
+
+        <h2>Endpoint Details</h2>
+        <ul>
+          <li><strong>Endpoint URL:</strong> <code>https://your-project-url/createPost</code></li>
+          <li><strong>HTTP Method:</strong> <code>POST</code></li>
+          <li><strong>Content Type:</strong> <code>application/json</code></li>
+        </ul>
+
+        <h2>Request Body</h2>
+        <p>The <code>createPost</code> endpoint expects a JSON object in the request body with the following fields:</p>
+        <ol>
+          <li><code>postTime</code> (required): A timestamp representing the post time. Must be a number.</li>
+          <li><code>wasPromoted</code> (required): Indicates whether the post was promoted. Must be a boolean.</li>
+          <li><code>containsImage</code> (required): Indicates whether the post contains an image. Must be a boolean.
+          </li>
+          <li><code>postIsAComment</code> (required): Indicates whether the post is a comment. Must be a boolean.</li>
+          <li><code>containsDonation</code> (required): Indicates whether the post contains a donation. Must be a
+            boolean.
+          </li>
+          <li><code>containsText</code> (required): Indicates whether the post contains text. Must be a boolean.</li>
+          <li><code>userId</code> (required): The ID of the user creating the post. Must be a number.</li>
+          <li><code>gamePosted</code> (required): The ID of the game associated with the post. Must be a number.</li>
+        </ol>
+
+        <h3>Conditional Fields</h3>
+        <p>Certain fields are required conditionally based on the values of other fields:</p>
+        <ul>
+          <li>If `containsImage` is `true`, the `imageId` field is required and must be a number.</li>
+          <li>If `containsText` is `true`, the `text` field is required and must be a string.</li>
+          <li>If `containsDonation` is `true`, the `donationButtons` field is required and must be an array.</li>
+          <li>If `postIsAComment` is `true`, the `parentPost` field is required and must be a number.</li>
+        </ul>
+
+        <h2>Response</h2>
+        <p>The endpoint responds with an HTTP status code and a response body.</p>
+        <ul>
+          <li>If the request is successful, the response will have an HTTP status code of `200` and the response body
+            will
+            contain a success message along with the ID of the created post.</li>
+          <li>If the request is invalid or missing required fields, the response will have an HTTP status code of `400`
+            and
+            the response body will contain an error message.</li>
+        </ul>
+
+        <h3>Successful Response</h3>
+        <p>Example response body:</p>
+        <pre><code>"Post added with ID: 123456789"</code></pre>
+
+        <h3>Error Response</h3>
+        <p>Example error response body:</p>
+        <pre><code>"Missing required fields"</code></pre>
+
+        <h2>Implementation Details</h2>
+        <p>The `createPost` function performs the following steps:</p>
+        <ol>
+          <li>Retrieves the request body from the POST request.</li>
+          <li>Checks if all the required fields (`postTime`, `wasPromoted`, `containsImage`, `postIsAComment`,
+            `containsDonation`, `containsText`, `userId`, `gamePosted`) are present and have the expected types. If any
+            required field is missing or has an invalid type, it sends a `400` error response.</li>
+          <li>Checks the conditional required fields based on the values of other fields. If any conditional required
+            field is
+            missing or has an invalid type, it sends a `400` error response.</li>
+          <li>Initializes the Firebase Admin SDK.</li>
+          <li>Retrieves a reference to the `Posts` collection in the Firebase Realtime Database.</li>
+          <li>Pushes the post data to the `Posts` collection, generating a unique key for the new post.</li>
+          <li>Sets the `postId` field of the newly created post to the generated key.</li>
+          <li>Retrieves a reference to the `Posts` node under the `Users` collection for the user who created the post.
+          </li>
+          <li>Pushes the `postId` to the `Posts` node for the user.</li>
+          <li>Sends a successful response with a message indicating that the post was added along with the ID of the
+            created
+            post.</li>
+        </ol>
+
+        <h2>Usage</h2>
+        <p>To create a new post, send an HTTP POST request to the specified URL (`https://your-project-url/createPost`)
+          with a
+          valid JSON payload containing the required and optional fields.</p>
+
+        <p>Example request:</p>
+        <pre><code>POST https://your-project-url/createPost
+      Content-Type: application/json
+      
+      {
+        "postTime": 1652879400,
+        "wasPromoted": false,
+        "containsImage": true,
+        "imageId": 123,
+        "postIsAComment": false,
+        "containsDonation": false,
+        "containsText": true,
+        "text": "This is my post",
+        "userId": 456,
+        "gamePosted": 789
+      }</code></pre>
+
+        <p>This request creates a new post with the specified data.</p>
+
+        <p>Make sure to handle the response and error messages appropriately in your client application.</p>
+      </body>
+
+      </html>
+
+      <small>API documentation created using AI. It has been reviewed and should work. If you encounter any errors
+        please
+        email robloxShareSpher@gmail.com</small>
+    </div>
+
+    <!-- Customizer tab -->
+    <div id="Customizer" class="tabcontent">
+      <h3>Customizer</h3>
+      <p>This is the customizer documentation.</p>
+    </div>
+
+    <!-- Credit tab -->
+    <div id="Credit" class="tabcontent">
+      <h3>Credit</h3>
+      <p>This is the credit documentation.</p>
+    </div>
+
+    <!-- Installation tab -->
+    <div id="Installation" class="tabcontent">
+      <h3>Installation</h3>
+      <p>This is the installation documentation.</p>
+    </div>
+
+    <!-- Search Results tab -->
+    <div id="SearchResults" class="tabcontent">
+      <h1>Search Results</h1>
+      <div id="search-results-content"></div>
+    </div>
+
+  </div>
 
   <script>
     // Open the Home tab by default
