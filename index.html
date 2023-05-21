@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>My Documentation</title>
+  <title>ShareSphere</title>
   <style>
     /* Overall layout */
     body {
@@ -94,6 +94,17 @@
       margin-bottom: 10px;
       flex: 1;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
+    }
+
+    .imgbox {
+      display: grid;
+      height: 100%;
+    }
+
+    .center-fit {
+      max-width: 100%;
+      max-height: 100vh;
+      margin: auto;
     }
   </style>
   <script>
@@ -237,8 +248,11 @@
 
       <body>
         <div style="text-align: center;">
-          <img src="https://github.com/Brylan-Leske/ShareSphere/blob/gh-pages/pageAssets/BannerLogoWhite.png?raw=true"
-            alt="ShareSphere White Banner Logo">
+          <div class="imgbox">
+            <img class="center-fit"
+              src='https://github.com/Brylan-Leske/ShareSphere/blob/gh-pages/pageAssets/BannerLogoWhite.png?raw=true'
+              alt="ShareSphere White Banner Logo">
+          </div>
           <br>
           <b>ShareSphere is a modern, easy to use, and feature rich cross-game social network for Roblox.</b>
           <br>
