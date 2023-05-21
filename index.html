@@ -174,9 +174,19 @@
 
         var tabText = tab.innerText.toLowerCase();
 
-        var index = tabText.indexOf(searchInput);
-        if (index !== -1) {
+        var startIndex = 0;
+        var endIndex = 0;
+
+        while (true) {
+          startIndex = tabText.indexOf(searchInput, endIndex);
+          if (startIndex === -1) {
+            break;
+          }
+
+          endIndex = startIndex + searchInput.length;
+
           numResults++;
+
           var resultLink = document.createElement("a");
           resultLink.href = "#";
           resultLink.onclick = function (tabId) {
@@ -185,9 +195,9 @@
             };
           }(tabName);
 
-          var beforeText = tabText.substring(Math.max(0, index - 20), index);
-          var afterText = tabText.substring(index + searchInput.length, index + searchInput.length + 20);
-          var contextText = beforeText + "<strong>" + tabText.substr(index, searchInput.length) + "</strong>" + afterText;
+          var beforeText = tabText.substring(Math.max(0, startIndex - 20), startIndex);
+          var afterText = tabText.substring(endIndex, endIndex + 20);
+          var contextText = beforeText + "<strong>" + tabText.substr(startIndex, searchInput.length) + "</strong>" + afterText;
 
           resultLink.innerHTML = tabName + ": " + contextText;
           searchResultsContent.appendChild(resultLink);
@@ -201,6 +211,7 @@
 
       openTab("SearchResults", "Search Results", true);
     }
+
 
     function handleSearch(event) {
       if (event.keyCode === 13) {
