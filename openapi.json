@@ -1,0 +1,674 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "ShareSphere API V1",
+    "description": "Version 1 of the ShareSphere API. Allows for accessing core functionality such as getting posts, feeds, and users, as well as liking and creating posts.\n"
+  },
+  "servers": [
+    {
+      "url": "https://www.sharesphere.xyz/api"
+    }
+  ],
+  "paths": {
+    "/createPost": {
+      "post": {
+        "tags": [
+          "Developer Accessible"
+        ],
+        "summary": "Create a new post",
+        "description": "Creates a new post in the database with the specified content data.",
+        "operationId": "createPost",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "integer",
+                    "example": 12345
+                  },
+                  "gamePosted": {
+                    "type": "integer",
+                    "example": 67890
+                  },
+                  "text": {
+                    "type": "string",
+                    "example": "This is a sample post"
+                  },
+                  "contentType": {
+                    "type": "integer",
+                    "description": "0: No additional content, 1: Image, 2: Invite, 3: Poll, 4: Donation",
+                    "example": 1
+                  },
+                  "contentData": {
+                    "$ref": "#/components/schemas/ContentData"
+                  }
+                },
+                "required": [
+                  "userId",
+                  "gamePosted",
+                  "text",
+                  "contentType"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Post added successfully",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Post added with ID: postId"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Missing required fields"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Unauthorized: Missing Authorization header"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "You can only post once every two minutes in unverified games"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "An error occurred while creating the post"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserSession"
+          }
+        ],
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/getUserInfo": {
+      "get": {
+        "tags": [
+          "Developer Accessible"
+        ],
+        "summary": "Retrieve user information",
+        "description": "Fetches detailed information about a user including their posts, likes, and last online time.",
+        "operationId": "getUserInfo",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "description": "ID of the user to retrieve information for",
+            "schema": {
+              "type": "integer",
+              "example": 12345
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User information retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userOnboarded": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "userId": {
+                      "type": "integer",
+                      "example": 12345
+                    },
+                    "posts": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "likes": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "lastOnlineTime": {
+                      "type": "integer",
+                      "example": 1627382400
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Missing userId"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Unauthorized: Missing Authorization header"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "An error occurred while retrieving user information"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/loadPosts": {
+      "get": {
+        "tags": [
+          "Developer Accessible"
+        ],
+        "summary": "Load posts based on specified criteria",
+        "description": "Loads posts from specific games, feeds, following, users, or parent posts based on the provided loading type and criteria.",
+        "operationId": "loadPosts",
+        "parameters": [
+          {
+            "name": "loadingType",
+            "in": "query",
+            "required": true,
+            "description": "Specifies the type of loading operation. 0: Global feed, 1: Game feed, 2: Global and game feed, 3: User posts, 4: Parent post, 5: Specific post(s)",
+            "schema": {
+              "type": "integer",
+              "example": 0
+            }
+          },
+          {
+            "name": "numberOfPosts",
+            "in": "query",
+            "required": false,
+            "description": "Number of posts to load. Required for loading types 0 to 4.",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            }
+          },
+          {
+            "name": "gamePosted",
+            "in": "query",
+            "required": false,
+            "description": "ID of the game for loading types 1 and 2.",
+            "schema": {
+              "type": "integer",
+              "example": 67890
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "description": "User ID(s) for loading type 3. Comma-separated list for multiple users.",
+            "schema": {
+              "type": "string",
+              "example": "12345,67890"
+            }
+          },
+          {
+            "name": "parentPost",
+            "in": "query",
+            "required": false,
+            "description": "ID of the parent post for loading type 4.",
+            "schema": {
+              "type": "string",
+              "example": "abcd1234"
+            }
+          },
+          {
+            "name": "postId",
+            "in": "query",
+            "required": false,
+            "description": "Post ID(s) for loading type 5. Comma-separated list for multiple posts.",
+            "schema": {
+              "type": "string",
+              "example": "abcd1234,efgh5678"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Posts loaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadPostsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Missing required parameters: loadingType"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Unauthorized: Missing Authorization header"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "An error occurred while loading posts"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/getGlobalSettings": {
+      "get": {
+        "tags": [
+          "Developer Accessible"
+        ],
+        "summary": "Retrieve global ShareSphere settings",
+        "description": "Retrieves global ShareSphere settings such as FeatureFlag, version, etc.",
+        "operationId": "getGlobalSettings",
+        "parameters": null,
+        "responses": {
+          "200": {
+            "description": "Retrieved global settings successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "featureFlag": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "version": {
+                      "type": "string",
+                      "example": "1.0.0"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "Authorization": {
+        "name": "Authorization",
+        "description": "API key for authorization",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "example": "your-api-key"
+      },
+      "UserSession": {
+        "name": "UserSession",
+        "description": "User session token",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "example": "user-session-token"
+      }
+    },
+    "schemas": {
+      "ImageContent": {
+        "type": "object",
+        "properties": {
+          "imageId": {
+            "type": "integer",
+            "example": 13618601112
+          }
+        },
+        "required": [
+          "imageId"
+        ]
+      },
+      "InviteContent": {
+        "type": "object",
+        "properties": {
+          "gameId": {
+            "type": "integer",
+            "example": 0
+          },
+          "thumbnailImageId": {
+            "type": "integer",
+            "example": 0
+          },
+          "descriptionText": {
+            "type": "string",
+            "example": ""
+          },
+          "teleportToServer": {
+            "type": "boolean",
+            "example": false
+          },
+          "serverInstanceId": {
+            "type": "integer",
+            "example": 0
+          },
+          "teleportData": {
+            "type": "string",
+            "example": ""
+          }
+        },
+        "required": [
+          "gameId",
+          "thumbnailImageId",
+          "descriptionText",
+          "teleportToServer",
+          "serverInstanceId",
+          "teleportData"
+        ]
+      },
+      "PollContent": {
+        "type": "object",
+        "properties": {
+          "pollChoices": {
+            "type": "object",
+            "properties": {
+              "option1": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "example": "This is the first option!"
+                  }
+                },
+                "required": [
+                  "text"
+                ]
+              },
+              "option2": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "example": "This is the second option!"
+                  }
+                },
+                "required": [
+                  "text"
+                ]
+              },
+              "option3": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "example": ""
+                  }
+                }
+              }
+            },
+            "required": [
+              "option1",
+              "option2"
+            ]
+          },
+          "voteCanBeSwitched": {
+            "type": "boolean",
+            "example": false
+          },
+          "canBeViewed": {
+            "type": "boolean",
+            "example": false
+          },
+          "expirationTime": {
+            "type": "integer",
+            "example": 0
+          }
+        },
+        "required": [
+          "pollChoices",
+          "voteCanBeSwitched",
+          "canBeViewed",
+          "expirationTime"
+        ]
+      },
+      "DonationContent": {
+        "type": "object",
+        "properties": {
+          "button1": {
+            "type": "object",
+            "properties": {
+              "productId": {
+                "type": "integer",
+                "example": 14001353217
+              }
+            },
+            "required": [
+              "productId"
+            ]
+          },
+          "button2": {
+            "type": "object",
+            "properties": {
+              "productId": {
+                "type": "integer",
+                "example": 8877302779
+              }
+            },
+            "required": [
+              "productId"
+            ]
+          },
+          "button3": {
+            "type": "object",
+            "properties": {
+              "productId": {
+                "type": "integer",
+                "example": 0
+              }
+            },
+            "required": [
+              "productId"
+            ]
+          }
+        },
+        "required": [
+          "button1",
+          "button2"
+        ]
+      },
+      "ContentData": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ImageContent"
+          },
+          {
+            "$ref": "#/components/schemas/InviteContent"
+          },
+          {
+            "$ref": "#/components/schemas/PollContent"
+          },
+          {
+            "$ref": "#/components/schemas/DonationContent"
+          }
+        ]
+      },
+      "Post": {
+        "type": "object",
+        "properties": {
+          "postId": {
+            "type": "string",
+            "example": "abcd1234"
+          },
+          "userId": {
+            "type": "integer",
+            "example": 12345
+          },
+          "gamePosted": {
+            "type": "integer",
+            "example": 67890
+          },
+          "parentPost": {
+            "type": "string",
+            "example": "efgh5678"
+          },
+          "contentType": {
+            "type": "integer",
+            "example": 1
+          },
+          "contentData": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ImageContent"
+              },
+              {
+                "$ref": "#/components/schemas/InviteContent"
+              },
+              {
+                "$ref": "#/components/schemas/PollContent"
+              },
+              {
+                "$ref": "#/components/schemas/DonationContent"
+              }
+            ]
+          },
+          "timePosted": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-24T12:34:56Z"
+          }
+        }
+      },
+      "GameAndGlobalPosts": {
+        "type": "object",
+        "properties": {
+          "gamePosts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Post"
+            }
+          },
+          "globalPosts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Post"
+            }
+          }
+        }
+      },
+      "MultiplePostsArray": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Post"
+        }
+      },
+      "LoadPostsResponse": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Post"
+          },
+          {
+            "$ref": "#/components/schemas/MultiplePostsArray"
+          },
+          {
+            "$ref": "#/components/schemas/GameAndGlobalPosts"
+          }
+        ]
+      }
+    },
+    "securitySchemes": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  }
+}
