@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://www.sharesphere.xyz/api"
+      "url": "https://www.sharesphere.xyz/api/v1"
     }
   ],
   "paths": {
